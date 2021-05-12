@@ -21,6 +21,7 @@
             class="list-group-item"
             v-for="item in group.list"
             :key="item.id"
+            @click="selectItem(item)"
           >
             <img
               class="avatar"
@@ -95,6 +96,9 @@ export default {
     this.listHeight = []
   },
   methods: {
+    selectItem(item) {
+      this.$emit('select', item)
+    },
     onShortcutTouchStart(e) {
       const anchorIndex = getData(e.target, 'index')
       const firstTouch = e.touches[0]
