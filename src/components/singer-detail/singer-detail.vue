@@ -1,31 +1,45 @@
 <template>
-  <div class="singer-detail"></div>
+  <music-list
+    :songs="songs"
+    :title="title"
+    :bgImage="bgImage"
+  ></music-list>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
+import { getSingerDetail } from 'api/singer'
+import MusicList from 'components/music-list/music-list'
 export default {
+  components: { MusicList },
   data() {
-    return {}
+    return {
+      songs: []
+    }
   },
   computed: {
-    ...mapGetters(['singer'])
+    ...mapGetters(['singer']),
+    title() {
+      return this.singer.name
+    },
+    bgImage() {
+      return this.singer.pic
+    }
   },
   created() {
-    console.log(this.singer)
+    this._getDetail()
+  },
+  methods: {
+    async _getDetail() {
+      if (!this.singer.mid) {
+        this.$router.push('/singer')
+      }
+      const res = await getSingerDetail(this.singer)
+      this.songs = res.songs
+    }
   }
 }
 </script>
 <style lang='stylus' scoped>
 @import '~common/stylus/variable.styl';
-
-.singer-detail {
-  position: fixed;
-  z-index: 100;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: $color-background;
-}
 </style>
